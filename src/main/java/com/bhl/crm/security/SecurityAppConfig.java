@@ -28,10 +28,19 @@ public class SecurityAppConfig extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.formLogin();
-		http.authorizeRequests().anyRequest().authenticated();
+		/*
+		 * http.formLogin(); http.authorizeRequests().anyRequest().authenticated().and()
+		 * .logout().permitAll();
+		 */
 		
-		super.configure(http);
+		http
+			.authorizeRequests().antMatchers("/","/show").hasAnyRole("ADMIN","EMPLOYEE","MANAGER")
+			.antMatchers("/addForm","/addProduct","/deleteProd","/updateForm","/updateProduct").hasRole("ADMIN").and()
+			.formLogin().loginPage("/login").loginProcessingUrl("/authenticatedTheUser").permitAll().and()
+			.logout().permitAll().and()
+			.exceptionHandling().accessDeniedPage("/accessDenied");
+		
+		
 	}
 	
 	@Bean

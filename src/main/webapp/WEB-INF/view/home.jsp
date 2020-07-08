@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,8 +64,11 @@
               
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li class="active"><a href="${pageContext.request.contextPath}/logout" class="btn btn-link">Sign Out<span class="sr-only">(current)</span></a></li>
-              
+              <li class="active">
+	             	<form:form method="POST" action="${pageContext.request.contextPath}/logout">
+	              		<input type="submit" value="Sign Out" class="btn btn-link" style="margin-top: 8px;"><span class="sr-only">(current)</span>
+	              	</form:form>
+	          </li>
             </ul>
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
