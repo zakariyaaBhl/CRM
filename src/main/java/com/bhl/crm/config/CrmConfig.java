@@ -23,7 +23,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.bhl.crm")
-@PropertySource("classpath:persistence-mysql.properties")
+@PropertySource({"classpath:persistence-mysql.properties","classpath:security-persistence-mysql.properties"})
 @EnableTransactionManagement
 public class CrmConfig implements WebMvcConfigurer{
 	
@@ -63,6 +63,31 @@ public class CrmConfig implements WebMvcConfigurer{
 		}
 		
 		return productDataSource;
+	}
+	
+	@Bean
+	public DataSource securityDataSource() {
+		ComboPooledDataSource securityDataSource = new ComboPooledDataSource();
+		try {
+			securityDataSource.setDriverClass(env.getProperty("security.jdbc.driver"));
+			
+			logger.info("\n====>>>>>security.url=" + env.getProperty("security.jdbc.url"));
+			logger.info("\n====>>>>>security.user=" + env.getProperty("security.jdbc.user"));
+			
+			securityDataSource.setJdbcUrl(env.getProperty("security.jdbc.url"));
+			securityDataSource.setUser(env.getProperty("security.jdbc.user"));
+			securityDataSource.setPassword(env.getProperty("security.jdbc.password"));
+			
+			securityDataSource.setInitialPoolSize(Integer.parseInt(env.getProperty("security.connection.pool.initialPoolSize")));
+			securityDataSource.setMinPoolSize(Integer.parseInt(env.getProperty("security.connection.pool.minPoolSize")));
+			securityDataSource.setMaxPoolSize(Integer.parseInt(env.getProperty("security.connection.pool.maxPoolSize")));
+			securityDataSource.setMaxIdleTime(Integer.parseInt(env.getProperty("security.connection.pool.maxIdleTime")));
+			
+		} catch (PropertyVetoException e) {
+			new RuntimeException(e);
+		}
+		
+		return securityDataSource;
 	}
 	
 	/*-- The next method handles the Hibernate properties --*/
